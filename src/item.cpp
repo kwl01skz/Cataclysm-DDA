@@ -7085,10 +7085,12 @@ int item::ammo_remaining() const
             return charges;
         } else {
             int res = 0;
+            bool flag_has_contents =false ;
             for( const item *e : contents.all_items_top( item_pocket::pocket_type::MAGAZINE ) ) {
                 res += e->charges;
+                flag_has_contents = true ;
             }
-            return res;
+            return flag_get_charges?res:charges;
         }
     } else if( is_gun() && magazine_integral() && !contents.empty() ) {
         return contents.first_ammo().charges;
@@ -7096,10 +7098,13 @@ int item::ammo_remaining() const
 
     if( is_magazine() ) {
         int res = 0;
-        for( const item *e : contents.all_items_top( item_pocket::pocket_type::MAGAZINE ) ) {
-            res += e->charges;
-        }
-        return res;
+            bool flag_has_contents =false ;
+            for( const item *e : contents.all_items_top( item_pocket::pocket_type::MAGAZINE ) ) {
+                res += e->charges;
+                flag_has_contents = true ;
+            }
+            return flag_get_charges?res:charges;
+
     }
 
     // Handle non-magazines with ammo_restriction in a CONTAINER type pocket (like quivers)
